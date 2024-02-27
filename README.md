@@ -422,3 +422,20 @@ class FooType extends AbstractType
     }
 }
 ```
+
+You don't like my default values ? 
+
+You can create a Yaml (or XML or PHP according your configuration) in /conf/packages/ named eltharin_file_upload_manager.yaml
+
+and set your own default values: 
+
+eltharin_file_upload_manager:
+    default:
+        allow_update: false
+        allow_delete: true
+        data_class: null
+        delete_on_remove: false
+        file_storage_inline: true
+        file_manager: 'App\Service\FileManager'
+        file_storage_json: false
+        file_storage_path: '/public/documents'
