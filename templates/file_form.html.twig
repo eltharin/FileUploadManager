@@ -1,0 +1,14 @@
+{%- block file_upload_widget -%}
+	{% if file.thumbnail != '' %}
+		<img src="{{ file.thumbnail }}">
+	{% endif %}
+
+	{% if file.download_link != '' %}
+		<a download="fichier.jpg" href="{{ file.download_link }}">Download</a>
+	{% endif %}
+	{{ form_widget(form) }}
+{%- endblock  %}
+
+{%- block hidden_file_row -%}
+
+{%- endblock  %}
