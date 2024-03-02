@@ -334,9 +334,15 @@ Form Type :
 ``` php
 use Eltharin\FileUploadManagerBundle\Form\FileUploadType;
 use App\Entity\File;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class FooType extends AbstractType
 {
+    public function __construct(private UrlGeneratorInterface $router)
+    {
+
+    }
+    
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
