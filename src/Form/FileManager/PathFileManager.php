@@ -75,7 +75,7 @@ class PathFileManager implements FileManagerInterface
 
         if($options['data_class'] !== null)
         {
-            $link = str_starts_with($view->vars['value']->getPath(), DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR) ? substr($view->vars['value']->getPath(), 7) : $view->vars['value']->getPath();
+            $link = str_starts_with($view->vars['value']->getPath(), DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR) ? substr($view->vars['value']->getPath(), 7) : '';
             $filename = $view->vars['value']->getName();
         }
         else
@@ -90,7 +90,7 @@ class PathFileManager implements FileManagerInterface
 
         if($options['file_downloadLink'] !== null)
         {
-            $link = $options['file_downloadLink']($view);
+            $link = is_callable($options['file_downloadLink']) ? $options['file_downloadLink']($view) : $options['file_downloadLink'];
         }
 
 		return [
