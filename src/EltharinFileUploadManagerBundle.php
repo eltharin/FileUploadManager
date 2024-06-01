@@ -4,6 +4,7 @@ namespace Eltharin\FileUploadManagerBundle;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Eltharin\FileUploadManagerBundle\Form\FileCollectionType;
+use Eltharin\FileUploadManagerBundle\Form\FileManager\FileManagerInterface;
 use Eltharin\FileUploadManagerBundle\Form\FileManager\InlineFileManager;
 use Eltharin\FileUploadManagerBundle\Form\FileManager\PathFileManager;
 use Eltharin\FileUploadManagerBundle\Form\FileUploadType;
@@ -15,6 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
@@ -63,6 +65,11 @@ class EltharinFileUploadManagerBundle extends AbstractBundle
             'form_themes' => ['@EltharinFileUploadManager/file_form.html.twig']
         ]);
 
+		$builder->registerForAutoconfiguration(FileManagerInterface::class)
+			->addTag('app.fileManager')
+		;
+
+
 		$container->services()
 			->set('eltharin_fileManager_locator')
 			->class(ServiceLocator::class)
@@ -71,6 +78,7 @@ class EltharinFileUploadManagerBundle extends AbstractBundle
 				tagged_iterator('app.fileManager', 'key'),
 			])
 		;
+
 
         $container->services()
             ->set(FileUploadType::class)
@@ -96,7 +104,7 @@ class EltharinFileUploadManagerBundle extends AbstractBundle
 		$container->services()->set(InlineFileManager::class)->tag('app.fileManager');
 		$container->services()->set(PathFileManager::class)->tag('app.fileManager')
 			->args([
-				'%kernel.project_dir%',
+				service(KernelInterface::class),
 				service(SluggerInterface::class),
 			]);
 

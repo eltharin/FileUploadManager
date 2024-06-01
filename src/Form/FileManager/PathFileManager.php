@@ -4,25 +4,31 @@ namespace Eltharin\FileUploadManagerBundle\Form\FileManager;
 
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 class PathFileManager implements FileManagerInterface
 {
-	public function __construct(private string $projectDir, private SluggerInterface $slugger)
+	protected string $path;
+	protected string $newName;
+	protected string $projectDir;
+
+	public function __construct(protected KernelInterface $kernel, protected SluggerInterface $slugger)
 	{
+		$this->projectDir = $this->kernel->getProjectDir();
 	}
 
 	public function populate(&$fileData, UploadedFile $file, $options)
 	{
         $this->unlinkFile($fileData, $options);
-        
-		$originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-		$newName = $this->slugger->slug($originalFilename) . '_' . uniqid() . '.' . $file->guessExtension();
-		$path = DIRECTORY_SEPARATOR . $options['file_storage_path'];
+
+		$this->newName = $this->getFileName($file, $options);
+
+		$this->path = $this->getSavePath($file, $options);
 
         if($options['data_class'] !== null)
         {
-            $fileData->setPath($path . DIRECTORY_SEPARATOR . $newName);
+            $fileData->setPath($this->path . DIRECTORY_SEPARATOR . $this->newName);
             $fileData->setName($file->getClientOriginalName());
             $fileData->setSize($file->getSize());
             $fileData->setMimeType($file->getClientMimeType());
@@ -30,7 +36,7 @@ class PathFileManager implements FileManagerInterface
         else
         {
             $fileData = json_encode([
-                'path' => $path . DIRECTORY_SEPARATOR . $newName,
+                'path' => $this->path . DIRECTORY_SEPARATOR . $this->newName,
                 'name' => $file->getClientOriginalName(),
                 'size' => $file->getSize(),
                 'mimeType' => $file->getClientMimeType(),
@@ -38,7 +44,7 @@ class PathFileManager implements FileManagerInterface
 
         }
 
-		$file->move( $this->projectDir . $path, $newName);
+		$this->saveFile($file, $options);
 	}
 
 	public function remove(&$fileData, array $options)
@@ -98,5 +104,21 @@ class PathFileManager implements FileManagerInterface
 			'download_link' => $link,
             'download_name' => $filename,
 		];
+	}
+
+	protected function getFileName(UploadedFile $file, array $options)
+	{
+		$originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+		return $this->slugger->slug($originalFilename) . '_' . uniqid() . '.' . $file->guessExtension();
+	}
+
+	protected function getSavePath(UploadedFile $file, array $options)
+	{
+		return DIRECTORY_SEPARATOR . $options['file_storage_path'];
+	}
+
+	protected function saveFile(UploadedFile $file, array $options)
+	{
+		$file->move( $this->projectDir . $this->path, $this->newName);
 	}
 }
