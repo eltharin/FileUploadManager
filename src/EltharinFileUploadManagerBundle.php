@@ -3,7 +3,6 @@
 namespace Eltharin\FileUploadManagerBundle;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Eltharin\FileUploadManagerBundle\Form\FileCollectionType;
 use Eltharin\FileUploadManagerBundle\Form\FileManager\FileManagerInterface;
 use Eltharin\FileUploadManagerBundle\Form\FileManager\InlineFileManager;
 use Eltharin\FileUploadManagerBundle\Form\FileManager\PathFileManager;
@@ -90,14 +89,14 @@ class EltharinFileUploadManagerBundle extends AbstractBundle
             ])
         ;
 
-        $container->services()
+      /*  $container->services()
             ->set(FileCollectionType::class)
             ->tag('form.type')
             ->args([
                 service('eltharin_fileManager_locator'),
                 service(EntityManagerInterface::class),
             ])
-        ;
+        ;*/
 
 		$container->services()->set(FileUploaderMapper::class);
 
