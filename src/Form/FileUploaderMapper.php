@@ -4,6 +4,7 @@ namespace Eltharin\FileUploadManagerBundle\Form;
 
 use Eltharin\FileUploadManagerBundle\Form\FileManager\FileManagerInterface;
 use Symfony\Component\Form\Extension\Core\DataMapper\DataMapper;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FileUploaderMapper extends DataMapper
@@ -12,10 +13,11 @@ class FileUploaderMapper extends DataMapper
 	private ?FileManagerInterface $fileManager = null;
 	private array $params = [];
 
-	public function setParams(array $params, FileManagerInterface $fileManager) : static
+	public function setParams(array $params, FileManagerInterface $fileManager, FormBuilderInterface $builder) : static
 	{
 		$this->params = $params;
-		$this->fileManager = $fileManager;
+		$this->fileManager = clone($fileManager);
+        $this->fileManager->setBuilder($builder);
 		return clone($this);
 	}
 

@@ -107,5 +107,16 @@ class EltharinFileUploadManagerBundle extends AbstractBundle
 				service(SluggerInterface::class),
 			]);
 
+        $container->extension('doctrine',[
+            'orm' => [
+                'mappings' => [
+                    'EltharinFileUploadManagerBundle' => [
+                        'is_bundle' => true,
+                        'prefix' => 'Eltharin\\FileUploadManagerBundle\\Entity',
+                        'alias' => 'EltharinFileUploadManager',
+                    ]
+                ],
+            ]
+        ]);
 	}
 }

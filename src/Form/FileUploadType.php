@@ -63,7 +63,7 @@ class FileUploadType extends AbstractType
 			}
 		);
 
-		$builder->setDataMapper($this->fileUploaderMapper->setParams($options, $this->fileManagerServiceLocator->get($options['file_manager'])));
+		$builder->setDataMapper($this->fileUploaderMapper->setParams($options, $this->fileManagerServiceLocator->get($options['file_manager']), $builder));
 	}
 
 

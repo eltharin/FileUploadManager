@@ -2,6 +2,7 @@
 
 namespace Eltharin\FileUploadManagerBundle\Form\FileManager;
 
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -63,4 +64,9 @@ class InlineFileManager implements FileManagerInterface
 			'download_name' => 'image.jpg',
 		];
 	}
+
+    public function setBuilder(FormBuilderInterface $builder): void
+    {
+        // TODO: Implement setBuilder() method.
+    }
 }

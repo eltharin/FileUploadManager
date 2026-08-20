@@ -2,6 +2,7 @@
 
 namespace Eltharin\FileUploadManagerBundle\Form\FileManager;
 
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -121,4 +122,9 @@ class PathFileManager implements FileManagerInterface
 	{
 		$file->move( $this->projectDir . $this->path, $this->newName);
 	}
+
+    public function setBuilder(FormBuilderInterface $builder): void
+    {
+        // TODO: Implement setBuilder() method.
+    }
 }
